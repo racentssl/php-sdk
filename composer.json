@@ -17,5 +17,9 @@
         "psr-4": {
             "Racent\\Test": "tests"
         }
+    },
+    "require": {
+        "php": ">=5.6",
+        "guzzlehttp/guzzle": ">4.0"
     }
 }
