@@ -21,5 +21,15 @@
     "require": {
         "php": ">=5.6",
         "guzzlehttp/guzzle": ">4.0"
+    },
+    "suggest": {
+        "laravel/framework": "在 Laravel 5.5+ 框架上使用, 效果更佳"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Racent\\RacentServiceProvider"
+            ]
+        }
     }
 }
