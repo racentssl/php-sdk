@@ -1,0 +1,21 @@
+{
+    "name": "racent/sdk",
+    "description": "锐诚SSL的API SDK",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Xiaohui Lam",
+            "email": "op@staff.digital-sign.cn"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Racent\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Racent\\Test": "tests"
+        }
+    }
+}
