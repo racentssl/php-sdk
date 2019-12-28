@@ -2,6 +2,7 @@
 
 namespace Racent;
 
+use ArrayObject;
 use Racent\Exceptions\RacentException;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
@@ -68,6 +69,14 @@ class Racent
         }
 
         if ($body->code != 1) {
+            if (is_string($body->errors)) {
+                $body->errors = new ArrayObject([
+                    'err' => [
+                        $body->errors,
+                    ],
+                ]);
+            }
+
             $message = collect($body->errors)->count() ? collect($body->errors)->collapse()->implode(',') : json_encode($body);
             throw new RacentException($body->code . ' ' . $message, 412);
         }
