@@ -54,6 +54,24 @@ class RacentSsl
     }
 
     /**
+     * 重签 SSL 订阅
+     *
+     * @param string $certId
+     * @param string $reason
+     * @param string|null $uniqueValue
+     *
+     * @throws RacentException
+     */
+    public function reissue($certId, $reason, $uniqueValue = null)
+    {
+        return $this->racent->post('/ssl/place', [], collect([
+            'certId' => $certId,
+            'reason' => $reason,
+            'uniqueValue' => $uniqueValue,
+        ])->filter()->toArray());
+    }
+
+    /**
      * 替换 SSL 订阅信息
      *
      * @param string $certId  要替换证书 id

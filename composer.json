@@ -15,7 +15,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Racent\\Test": "tests"
+            "Racent\\Test\\": "tests"
         }
     },
     "require": {

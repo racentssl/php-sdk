@@ -19,6 +19,13 @@ class ParamsRequest
     public $server;
 
     /**
+     * 1-20 个字符（a-z A-Z 0-9）用于 sectigo 产品，分销商自主生成验证信息。
+     *
+     * @var string|null
+     */
+    public $uniqueValue = null;
+
+    /**
      * 域名信息，单域名证书此项重只包括一条信息。示例：           [  {    "dcvEmail": "admin@xxx.com",    "dcvMethod": "EMAIL",    "domainName": "www.xxx.com"  },   {    "dcvEmail": "admin@aaa.com",    "dcvMethod": "EMAIL",    "domainName": "aaa.com"  },   {    "dcvEmail": "admin@racent.com",    "dcvMethod": "EMAIL",    "domainName": "racent.com"  }  ]  其中具体参数描述如下：
      *
      * @var DcvRequest[] 数组
