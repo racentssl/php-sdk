@@ -7,8 +7,6 @@ use Racent\Exceptions\RacentException;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 
-use function GuzzleHttp\json_decode;
-
 class Racent
 {
     const API_BASE = 'https://portal.racent.com';
@@ -53,7 +51,7 @@ class Racent
     public function post($url, $query, $data)
     {
         $client = new Client([
-            'base_uri' => self::API_BASE,
+            'base_uri' => static::API_BASE,
         ]);
 
         $response = $client->post($url, [
