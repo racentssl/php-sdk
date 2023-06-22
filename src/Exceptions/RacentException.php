@@ -12,7 +12,7 @@ class RacentException extends Exception implements HttpExceptionInterface
      *
      * @return int An HTTP response status code
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->getCode();
     }
@@ -22,7 +22,7 @@ class RacentException extends Exception implements HttpExceptionInterface
      *
      * @return array Response headers
      */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return [
             'Error' => $this->getMessage(),
