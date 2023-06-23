@@ -212,8 +212,8 @@ class RacentSsl
     /**
      * 删除证书 dcv 验证未通过域名
      *
-     * @param mixed $certId
-     * @param mixed $domainName
+     * @param string $certId
+     * @param string $domainName
      *
      * @throws RacentException
      */
@@ -228,7 +228,7 @@ class RacentSsl
     /**
      * 批量删除证书 dcv 验证未通过域名
      *
-     * @param mixed $certId
+     * @param string $certId
      *
      * @throws RacentException
      */
