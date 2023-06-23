@@ -62,6 +62,21 @@ class ContactsRequest
      */
     public $organation;
 
+    public function __construct($job = null, $country = null,  $state, $city = null, $email = null, $address = null, $organation = null, $mobile = null, $firstName = null, $lastName = null, $postCode = null)
+    {
+        $this->job = $job;
+        $this->country = $country;
+        $this->state = $state;
+        $this->city = $city;
+        $this->address = $address;
+        $this->email = $email;
+        $this->mobile = $mobile;
+        $this->lastName = $lastName;
+        $this->postCode = $postCode;
+        $this->firstName = $firstName;
+        $this->organation = $organation;
+    }
+
     /**
      * 转化为数组
      *

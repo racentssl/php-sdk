@@ -46,6 +46,16 @@ class OrganizationRequest
      */
     public $organizationPostCode;
 
+    public function __construct($organizationName = null, $organizationMobile = null, $organizationAddress = null, $organizationCountry = null, $organizationCity = null, $organizationPostCode = null)
+    {
+        $this->organizationName = $organizationName;
+        $this->organizationMobile = $organizationMobile;
+        $this->organizationAddress = $organizationAddress;
+        $this->organizationCountry = $organizationCountry;
+        $this->organizationCity = $organizationCity;
+        $this->organizationPostCode = $organizationPostCode;
+    }
+
     /**
      * 转化为数组
      *

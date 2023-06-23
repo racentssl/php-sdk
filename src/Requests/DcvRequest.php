@@ -25,6 +25,13 @@ class DcvRequest
      */
     public $domainName;
 
+    public function __construct($domainName = null, $dcvMethod = null, $dcvEmail = null)
+    {
+        $this->dcvMethod = $dcvMethod;
+        $this->dcvEmail = $dcvEmail;
+        $this->domainName = $domainName;
+    }
+
     /**
      * 转化为数组
      *
