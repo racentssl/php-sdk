@@ -2,8 +2,10 @@
 
 namespace Racent;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Racent\Exceptions\RacentException;
 use Racent\Requests\ParamsRequest;
+use Racent\Requests\DcvRequest;
 use Racent\Traits\RacentResources;
 
 class RacentSsl
@@ -184,6 +186,56 @@ class RacentSsl
             'domainName' => $domainName,
             'dcvMethod' => $dcvMethod,
             'dcvEmail' => $dcvEmail,
+        ])->filter()->toArray());
+    }
+
+    /**
+     * 批量修改 SSL 订阅域名验证方式
+     *
+     * @param string $certId
+     * @param string $dcvMethod
+     * @param string $dcvEmail
+     * @param DcvRequest[] $domainInfo
+     *
+     * @throws RacentException
+     */
+    public function batchUpdateDCV($certId, $dcvMethod = null, $dcvEmail = null, $domainInfo = null)
+    {
+        return $this->racent->post('/ssl/batchUpdateDCV', [], collect([
+            'certId' => $certId,
+            'dcvMethod' => $dcvMethod,
+            'dcvEmail' => $dcvEmail,
+            'domainInfo' => $domainInfo,
+        ])->filter()->toArray());
+    }
+
+    /**
+     * 删除证书 dcv 验证未通过域名
+     *
+     * @param mixed $certId
+     * @param mixed $domainName
+     *
+     * @throws RacentException
+     */
+    public function removeMdcDomain($certId, $domainName)
+    {
+        return $this->racent->post('/ssl/removeMdcDomain', [], collect([
+            'certId' => $certId,
+            'domainName' => $domainName,
+        ])->filter()->toArray());
+    }
+
+    /**
+     * 批量删除证书 dcv 验证未通过域名
+     *
+     * @param mixed $certId
+     *
+     * @throws RacentException
+     */
+    public function batchRemoveMdcDomain($certId)
+    {
+        return $this->racent->post('/ssl/batchRemoveMdcDomain', [], collect([
+            'certId' => $certId,
         ])->filter()->toArray());
     }
 }
