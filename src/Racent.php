@@ -5,7 +5,10 @@ namespace Racent;
 use ArrayObject;
 use Racent\Exceptions\RacentException;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 class Racent
 {
@@ -52,7 +55,12 @@ class Racent
     {
         $client = new Client([
             'base_uri' => static::API_BASE,
+            RequestOptions::HTTP_ERRORS => false,
         ]);
+
+        $url && logger()->info('Racent URL', [$url]);
+        $query && logger()->info('Racent Query', $query);
+        $data && logger()->info('Racent Data', $data);
 
         $response = $client->post($url, [
             RequestOptions::QUERY => $query,
@@ -60,10 +68,20 @@ class Racent
                 'api_token' => $this->api_token,
             ])->toArray(),
         ]);
-
         $body = json_decode($response->getBody()->__toString());
+
+        if ($response->getStatusCode() != 200) {
+            logger()->info('Racent Response statusCode: ' . $response->getStatusCode());
+            logger()->info('Racent Response body: ' . $response->getBody()->__toString());
+            throw new RacentException('API responses bad status code ' . $response->getStatusCode(), 400);
+        }
+        if (json_last_error() === JSON_ERROR_NONE) {
+            logger()->info('Racent Response', json_decode($response->getBody()->__toString(), true));
+        } else {
+            throw new RacentException('API responses bad json ' . $response->getBody()->__toString(), 400);
+        }
         if (!isset($body->code)) {
-            throw new RacentException('Bad response format', 412);
+            throw new RacentException('API responses bad format' . $response->getBody()->__toString(), 412);
         }
 
         if ($body->code != 1) {

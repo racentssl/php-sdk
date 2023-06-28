@@ -3,6 +3,7 @@
 namespace Racent;
 
 use Racent\Exceptions\RacentException;
+use Racent\Responses\Product\Product;
 use Racent\Traits\RacentResources;
 
 class RacentProduct
@@ -18,8 +19,16 @@ class RacentProduct
      */
     public function list($vendor)
     {
-        return $this->racent->post('/ssl/productList', [], [
+        $list = $this->racent->post('/ssl/productList', [], [
             'vendor' => $vendor,
         ]);
+        $products = [];
+        foreach ($list as $key => $value) {
+            $product = new Product($value);
+            $products[$product->code] = $product;
+        }
+
+        unset($list);
+        return $products;
     }
 }
