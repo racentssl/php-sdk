@@ -19,6 +19,9 @@ trait PropertySetter
                 continue;
             }
 
+            if ($value === []) {
+                continue;
+            }
             $this->{$property} = $value;
         }
     }
