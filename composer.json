@@ -22,7 +22,8 @@
         "php": ">=5.6",
         "guzzlehttp/guzzle": ">4.0",
         "illuminate/support": ">=5.0",
-        "psr/http-message": ">=1.0"
+        "psr/http-message": ">=1.0",
+        "symfony/http-kernel": ">=6.0"
     },
     "suggest": {
         "laravel/framework": "在 Laravel 5.5+ 框架上使用, 效果更佳"

@@ -62,7 +62,9 @@ class ContactsRequest
      */
     public $organation;
 
-    public function __construct($job = null, $country = null,  $state, $city = null, $email = null, $address = null, $organation = null, $mobile = null, $firstName = null, $lastName = null, $postCode = null)
+    public $idType;
+
+    public function __construct($job = null, $country = null, $state, $city = null, $email = null, $address = null, $organation = null, $mobile = null, $firstName = null, $lastName = null, $postCode = null, $idType = 'TYDMZ')
     {
         $this->job = $job;
         $this->country = $country;
@@ -75,6 +77,7 @@ class ContactsRequest
         $this->postCode = $postCode;
         $this->firstName = $firstName;
         $this->organation = $organation;
+        $this->idType = $idType;
     }
 
     /**
