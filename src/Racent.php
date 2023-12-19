@@ -5,14 +5,18 @@ namespace Racent;
 use ArrayObject;
 use Racent\Exceptions\RacentException;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\RequestOptions;
-use Psr\Http\Message\ResponseInterface;
 
 class Racent
 {
     const API_BASE = 'https://portal.racent.com';
+
+    /**
+     * API url
+     *
+     * @var string
+     */
+    protected $api_url;
 
     /**
      * API token
@@ -35,8 +39,14 @@ class Racent
      */
     public $product = null;
 
-    public function __construct($api_token)
+    public function __construct($api_token, $api_url = null)
     {
+        if ($api_url) {
+            $this->api_url = $api_url;
+        } else {
+            $this->api_url = static::API_BASE;
+        }
+
         $this->api_token = $api_token;
 
         $this->ssl = new RacentSsl($this);
@@ -54,7 +64,7 @@ class Racent
     public function post($url, $query, $data)
     {
         $client = new Client([
-            'base_uri' => static::API_BASE,
+            'base_uri' => $this->api_url,
             RequestOptions::HTTP_ERRORS => false,
         ]);
 
