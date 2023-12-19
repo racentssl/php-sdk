@@ -23,7 +23,7 @@ print_r($sdk->product->list('sectigo'));
 
 在 `.env` 添加
 ```
-RACENT_APITOKEN=你的token
+RACENT_API_TOKEN=你的token
 ```
 
 ```php
