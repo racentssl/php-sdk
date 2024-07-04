@@ -2,14 +2,14 @@
 
 namespace Racent;
 
-use ArrayObject;
 use Racent\Exceptions\RacentException;
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Facades\Http;
 
 class Racent
 {
     const API_BASE = 'https://portal.racent.com';
+
+    const NAME = 'Racent';
 
     /**
      * API url
@@ -63,56 +63,40 @@ class Racent
      */
     public function post($url, $query, $data)
     {
-        $client = new Client([
-            'base_uri' => $this->api_url,
-            RequestOptions::HTTP_ERRORS => false,
-        ]);
+        $url && logger()->info(static::NAME . ' [Request] URL', [$url]);
+        $query && !empty($query) && logger()->info(static::NAME . ' [Request] Query', $query);
+        $data && !empty($data) && logger()->info(static::NAME . ' [Request] Data', $data);
 
-        $url && logger()->info('Racent URL', [$url]);
-        $query && logger()->info('Racent Query', $query);
-        $data && logger()->info('Racent Data', $data);
+        $response = Http::acceptJson()->asJson()
+            ->timeout(20)
+            ->connectTimeout(10)
+            ->withQueryParameters($query ?? [])
+            ->post($this->api_url . $url, collect($data)->merge(['api_token' => $this->api_token, ])->toArray());
 
-        $response = $client->post($url, [
-            RequestOptions::QUERY => $query,
-            RequestOptions::JSON => collect($data)->merge([
-                'api_token' => $this->api_token,
-            ])->toArray(),
-        ]);
-        $body = json_decode($response->getBody()->__toString());
+        $json = $response->object();
 
-        if ($response->getStatusCode() != 200) {
-            logger()->info('Racent Response statusCode: ' . $response->getStatusCode());
-            logger()->info('Racent Response body: ' . $response->getBody()->__toString());
-            throw new RacentException('API responses bad status code ' . $response->getStatusCode(), 400);
+        if (!$response->successful()) {
+            logger()->error(static::NAME . ' [Response] statusCode: ' . $response->status());
+            logger()->error(static::NAME . ' [Response] body', $response->json() ? $response->json() : [$response->body()]);
+            throw new RacentException('API responses bad status code ' . $response->status(), 400);
         }
-        if (json_last_error() === JSON_ERROR_NONE) {
-            logger()->info('Racent Response', json_decode($response->getBody()->__toString(), true));
-        } else {
-            throw new RacentException('API responses bad json ' . $response->getBody()->__toString(), 400);
-        }
-        if (!isset($body->code)) {
-            throw new RacentException('API responses bad format' . $response->getBody()->__toString(), 412);
+        if (!$response->json('code')) {
+            logger()->error(static::NAME . ' [Response] bad format', $response->json() ? $response->json() : [$response->body()]);
+            throw new RacentException('API responses bad format' . $response->body(), 412);
         }
 
-        if ($body->code != 1) {
-            if (is_string($body->errors)) {
-                $body->errors = new ArrayObject([
-                    'err' => [
-                        $body->errors,
-                    ],
-                ]);
-            }
-
-            $message = collect($body->errors)->count() ? collect($body->errors)->collapse()->implode(',') : json_encode($body);
-            throw new RacentException($body->code . ' ' . $message, 412);
+        if ($response->json('code') != 1) {
+            $message = collect($response->json('errors'))->count() ? collect($response->json('errors'))->collapse()->implode(',') : json_encode($json);
+            logger()->error(static::NAME . ' [Response] error message', [$message]);
+            throw new RacentException($response->json('code') . ' ' . $message, 412);
         }
 
-        if (!isset($body->data)) {
-            return $body;
+        if (!$response->json('data')) {
+            return $json;
         }
 
-        $data = $body->data;
-        $meta = collect((array) $body)->except(['data', 'code']);
+        $data = $json->data;
+        $meta = collect($response->json())->except(['data', 'code']);
         foreach ($meta as $key => $value) {
             if (!isset($data->{$key})) {
                 data_set($data, $key, $value);
