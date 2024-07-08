@@ -64,7 +64,7 @@ class ContactsRequest
 
     public $idType;
 
-    public function __construct($job = null, $country = null, $state, $city = null, $email = null, $address = null, $organation = null, $mobile = null, $firstName = null, $lastName = null, $postCode = null, $idType = 'TYDMZ')
+    public function __construct($job = null, $country = null, $state = null, $city = null, $email = null, $address = null, $organation = null, $mobile = null, $firstName = null, $lastName = null, $postCode = null, $idType = 'TYDMZ')
     {
         $this->job = $job;
         $this->country = $country;
