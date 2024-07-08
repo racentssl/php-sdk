@@ -63,10 +63,6 @@ class Racent
      */
     public function post($url, $query, $data)
     {
-        $url && logger()->info(static::NAME . ' [Request] URL', [$url]);
-        $query && !empty($query) && logger()->info(static::NAME . ' [Request] Query', $query);
-        $data && !empty($data) && logger()->info(static::NAME . ' [Request] Data', $data);
-
         $response = Http::acceptJson()->asJson()
             ->timeout(20)
             ->connectTimeout(10)
@@ -76,18 +72,14 @@ class Racent
         $json = $response->object();
 
         if (!$response->successful()) {
-            logger()->error(static::NAME . ' [Response] statusCode: ' . $response->status());
-            logger()->error(static::NAME . ' [Response] body', $response->json() ? $response->json() : [$response->body()]);
             throw new RacentException('API responses bad status code ' . $response->status(), 400);
         }
         if (!$response->json('code')) {
-            logger()->error(static::NAME . ' [Response] bad format', $response->json() ? $response->json() : [$response->body()]);
             throw new RacentException('API responses bad format' . $response->body(), 412);
         }
 
         if ($response->json('code') != 1) {
             $message = collect($response->json('errors'))->count() ? collect($response->json('errors'))->collapse()->implode(',') : json_encode($json);
-            logger()->error(static::NAME . ' [Response] error message', [$message]);
             throw new RacentException($response->json('code') . ' ' . $message, 412);
         }
 
