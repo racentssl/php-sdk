@@ -61,6 +61,13 @@ class ParamsRequest
     public $tech;
 
     /**
+     * 是否送30天，0-不送，1-送
+     *
+     * @var int
+     */
+    public $originalfromOthers;
+
+    /**
      * 转化为数组
      *
      * @return array
